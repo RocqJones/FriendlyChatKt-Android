@@ -3,4 +3,5 @@
     <string name="profile_ic">profile ic</string>
     <string name="sign_out">Sign Out</string>
     <string name="send_button_label">Send</string>
+    <string name="attach_file">Attach file</string>
 </resources>

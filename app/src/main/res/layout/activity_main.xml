@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.google.firebase.udacity.friendlychat.MainActivity">
+    tools:context=".MainActivity">
 
     <ListView
         android:id="@+id/messageListView"
@@ -25,7 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:orientation="horizontal">
 
@@ -33,14 +32,19 @@
             android:id="@+id/photoPickerButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="@android:drawable/ic_menu_gallery" />
+            android:background="@android:drawable/ic_menu_gallery"
+            android:contentDescription="@string/attach_file" />
 
         <EditText
             android:id="@+id/messageEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="@color/normal_text_color"
+            android:inputType="textMultiLine"
+            android:importantForAutofill="no" />
 
         <Button
             android:id="@+id/sendButton"
@@ -48,6 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:enabled="false"
+            android:textSize="18sp"
+            android:textColor="@color/normal_text_color"
             android:text="@string/send_button_label"/>
 
     </LinearLayout>
