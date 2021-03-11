@@ -205,7 +205,8 @@ class MainActivity : AppCompatActivity() {
 //        )
         val query: Query = mMessagesDatabaseReference
 
-        val options : FirebaseListOptions<FriendlyMessage> = FirebaseListOptions.Builder<FriendlyMessage>().setQuery(query, FriendlyMessage::class.java).setLayout(R.layout.item_message).build()
+        val options : FirebaseListOptions<FriendlyMessage> = FirebaseListOptions.Builder<FriendlyMessage>().setQuery(query,
+                FriendlyMessage::class.java).setLayout(R.layout.item_message).build()
         mAdapter = object : FirebaseListAdapter<FriendlyMessage>(options){
             public override fun populateView(view: View, message: FriendlyMessage, position: Int) {
                 val photoImageView = view.findViewById<ImageView>(R.id.photoImageView)
