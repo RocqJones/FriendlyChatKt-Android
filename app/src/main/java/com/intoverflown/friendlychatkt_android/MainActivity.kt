@@ -13,12 +13,12 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.viewmodel.RequestCodes.GOOGLE_PROVIDER
 import com.firebase.ui.database.FirebaseListAdapter
+import com.firebase.ui.database.FirebaseListOptions
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.BuildConfig
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Query
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.storage.FirebaseStorage
@@ -115,19 +115,18 @@ class MainActivity : AppCompatActivity() {
             val user = p0.currentUser
             if (user != null) {
 //                Toast.makeText(this@MainActivity, "You're signed in!", Toast.LENGTH_LONG).show()
-//                onSignInInitialize(user.displayName)
+                onSignInInitialize(user.displayName)
             } else {
                 onSignOutCleanUp()
                 startActivityForResult(AuthUI.getInstance()
-                                .createSignInIntentBuilder()
-                                .setIsSmartLockEnabled(false)
-                                .setAvailableProviders(
-                                        Arrays.asList(AuthUI.IdpConfig.EmailBuilder().build(),
-                                            AuthUI.IdpConfig.GoogleBuilder().build()
-//                                        Builder(AuthUI.EMAIL_PROVIDER).build(),
-//                                                AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
-                                        ))
-                                .build(),
+                        .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)
+                        .setAvailableProviders(
+                                listOf(
+                                        AuthUI.IdpConfig.EmailBuilder().build(),
+                                        AuthUI.IdpConfig.GoogleBuilder().build()
+                                ))
+                        .build(),
                         RC_SIGN_IN)
             }
         }
@@ -154,7 +153,7 @@ class MainActivity : AppCompatActivity() {
             val selectedImageUri = data!!.data
             val photoRef = selectedImageUri?.lastPathSegment?.let {
                 mChatPhotosStoreageReference.child(
-                    it
+                        it
                 )
             }
             if (selectedImageUri != null) {
@@ -190,39 +189,47 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-//    private fun onSignInInitialize(username: String?) {
-//        mUsername = username ?: ANONYMOUS
-//
-//        // Initialize message ListView and its adapter
+    private fun onSignInInitialize(username: String?) {
+
+//        val options: FirebaseListOptions<ChatMessage> = FirebaseListOptions.Builder<ChatMessage>().setQuery(query,
+//                ChatMessage::class.java).setLayout(android.R.layout.simple_list_item_1).build()
+
+        mUsername = username ?: ANONYMOUS
+
+        // Initialize message ListView and its adapter
 //        mAdapter = object : FirebaseListAdapter<FriendlyMessage>(
-//            this,
-//            FriendlyMessage::class.java,
-//            R.layout.item_message,
-//            mMessagesDatabaseReference,
-//        ){
-//            public override fun populateView(view: View, message: FriendlyMessage, position: Int) {
-//                val photoImageView = view.findViewById<ImageView>(R.id.photoImageView)
-//                val messageTextView = view.findViewById<TextView>(R.id.messageTextView)
-//                val authorTextView = view.findViewById<TextView>(R.id.nameTextView)
-//
-//                val isPhoto = message.photoUrl != null
-//                if (isPhoto) {
-//                    messageTextView.visibility = View.GONE
-//                    photoImageView.visibility = View.VISIBLE
-//
-//                    Glide.with(photoImageView.context)
-//                            .load(message.photoUrl)
-//                            .into(photoImageView)
-//                } else {
-//                    messageTextView.visibility = View.VISIBLE
-//                    photoImageView.visibility = View.GONE
-//                    messageTextView.text = message.text
-//                }
-//                authorTextView.text = message.name
-//            }
-//        }
-//        mListView.adapter = mAdapter
-//    }
+//                this,
+//                FriendlyMessage::class.java,
+//                R.layout.item_message,
+//                mMessagesDatabaseReference,
+//        )
+        val query: Query = mMessagesDatabaseReference
+
+        val options : FirebaseListOptions<FriendlyMessage> = FirebaseListOptions.Builder<FriendlyMessage>().setQuery(query, FriendlyMessage::class.java).setLayout(R.layout.item_message).build()
+        mAdapter = object : FirebaseListAdapter<FriendlyMessage>(options){
+            public override fun populateView(view: View, message: FriendlyMessage, position: Int) {
+                val photoImageView = view.findViewById<ImageView>(R.id.photoImageView)
+                val messageTextView = view.findViewById<TextView>(R.id.messageTextView)
+                val authorTextView = view.findViewById<TextView>(R.id.nameTextView)
+
+                val isPhoto = message.photoUrl != null
+                if (isPhoto) {
+                    messageTextView.visibility = View.GONE
+                    photoImageView.visibility = View.VISIBLE
+
+                    Glide.with(photoImageView.context)
+                            .load(message.photoUrl)
+                            .into(photoImageView)
+                } else {
+                    messageTextView.visibility = View.VISIBLE
+                    photoImageView.visibility = View.GONE
+                    messageTextView.text = message.text
+                }
+                authorTextView.text = message.name
+            }
+        }
+        mListView.adapter = mAdapter
+    }
 
     private fun onSignOutCleanUp() {
         mUsername = ANONYMOUS
