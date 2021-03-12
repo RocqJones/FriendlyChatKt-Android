@@ -190,10 +190,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSignInInitialize(username: String?) {
-
-//        val options: FirebaseListOptions<ChatMessage> = FirebaseListOptions.Builder<ChatMessage>().setQuery(query,
-//                ChatMessage::class.java).setLayout(android.R.layout.simple_list_item_1).build()
-
         mUsername = username ?: ANONYMOUS
 
         // Initialize message ListView and its adapter
